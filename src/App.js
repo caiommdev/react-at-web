@@ -61,7 +61,10 @@ export default function App() {
   return (
     <Router>
       <div className="app-container">
-        <Sidebar onSelectCountry={setSelectedCountry} />
+        <Sidebar
+          onSelectCountry={setSelectedCountry}
+          g20Countries={g20Countries}
+        />
         <main>
           <div className="grid">
             <Routes>

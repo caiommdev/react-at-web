@@ -7,13 +7,15 @@ const List = styled.ul`
 `;
 
 const ListItem = styled.li`
-padding: 10px;
-cursor: pointer;
-background-color: ${(props) =>
-  props.isHighlighted ? "#d3d3d3" : "transparent"};
-&:hover {
-  background-color: #e0e0e0;
-}
+  padding: 10px;
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.isHighlighted ? "#d3d3d3" : "transparent"};
+  border-radius: 5px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #e0e0e0;
   }
 `;
 

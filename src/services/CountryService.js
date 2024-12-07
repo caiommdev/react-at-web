@@ -27,28 +27,36 @@ export const clearCacheByKey = (key) => {
 };
 
 export const fetchAndCacheCountries = async (g20Countries) => {
+  console.log(g20Countries);
+  console.log(typeof g20Countries);
+
+  console.log("limpando cache");
   clearCacheByKey(COUNTRY_KEY);
+  console.log("limpaou cache");
+  console.log("fazendo fetch");
   const data = await fetchCountriesFromAPI();
+  console.log("fetch feito");
+  console.log(data);
+  console.log("fazendo filter");
   const filteredCountries = data
     .filter((country) => g20Countries.includes(country.name.common))
     .sort((a, b) => a.name.common.localeCompare(b.name.common));
 
+  console.log("passou do filter");
+  console.log(filteredCountries);
   cacheCountries(filteredCountries);
   return filteredCountries;
 };
 
 export const getCountryByName = async (countryName) => {
-  // Verifica se o país está no cache
   const cachedData = getCachedCountries();
   const cachedCountry = cachedData.find(
     (country) => country.name.common.toLowerCase() === countryName.toLowerCase()
   );
 
   if (cachedCountry) {
-    return cachedCountry; // Retorna do cache se encontrar
+    return cachedCountry;
   }
-
-  // Caso não esteja no cache, busca na API
   try {
     const response = await fetch(
       `https://restcountries.com/v3.1/name/${countryName}`
@@ -61,6 +69,6 @@ export const getCountryByName = async (countryName) => {
     return await response.json();
   } catch (error) {
     console.error("Error fetching country:", error);
-    return null; // Retorna null em caso de erro
+    return null;
   }
 };

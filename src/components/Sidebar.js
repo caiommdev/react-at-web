@@ -5,6 +5,7 @@ import {
   getCachedCountries,
   fetchAndCacheCountries,
 } from "../services/CountryService";
+import CountryList from "./CountryList";
 
 const SidebarContainer = styled.aside`
   width: 250px;
@@ -16,34 +17,6 @@ const SidebarContainer = styled.aside`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  overflow-y: auto;
-`;
-
-const Footer = styled.div`
-  margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid #ccc;
-`;
-
-const SidebarTitle = styled.h3`
-  margin-bottom: 20px;
-  font-size: 1.5em;
-  color: #333;
-`;
-
-const CountryItem = styled.div`
-  padding: 10px;
-  margin: 5px 0;
-  background-color: ${({ isSelected }) => (isSelected ? "#d3e3fc" : "#fff")};
-  border-radius: 5px;
-  cursor: pointer;
-  &:hover {
-    background-color: #e0e8f6;
-  }
 `;
 
 const RegionFilterContainer = styled.div`
@@ -61,6 +34,23 @@ const SearchInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
+`;
+
+const Footer = styled.footer`
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #ccc;
+`;
+
+const SidebarTitle = styled.h3`
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #333;
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  overflow-y: auto;
 `;
 
 const AddAgendaLink = styled(Link)`
@@ -90,7 +80,7 @@ const Sidebar = ({ onSelectCountry, g20Countries }) => {
   useEffect(() => {
     const loadCountries = async () => {
       const cachedCountries = getCachedCountries();
-      if (cachedCountries) {
+      if (cachedCountries.length > 0) {
         setCountries(cachedCountries);
         setFilteredCountries(cachedCountries);
         setLoading(false);
@@ -138,7 +128,7 @@ const Sidebar = ({ onSelectCountry, g20Countries }) => {
   };
 
   const handleCountryClick = (country) => {
-    setSelectedCountry(country);
+    setSelectedCountry(country.name.common);
     onSelectCountry(country);
     navigate("/countries");
   };
@@ -147,7 +137,6 @@ const Sidebar = ({ onSelectCountry, g20Countries }) => {
     <SidebarContainer>
       <div>
         <SidebarTitle>Países do G20</SidebarTitle>
-
         <SearchInput
           type="text"
           placeholder="Pesquisar país..."
@@ -175,18 +164,12 @@ const Sidebar = ({ onSelectCountry, g20Countries }) => {
       <ContentWrapper>
         {loading ? (
           <p>Carregando...</p>
-        ) : filteredCountries.length > 0 ? (
-          filteredCountries.map((country) => (
-            <CountryItem
-              key={country.name.common}
-              isSelected={selectedCountry === country}
-              onClick={() => handleCountryClick(country)}
-            >
-              {country.name.common}
-            </CountryItem>
-          ))
         ) : (
-          <p>Nenhum país encontrado.</p>
+          <CountryList
+            countries={filteredCountries}
+            onCountryClick={handleCountryClick}
+            highlightedCountry={selectedCountry}
+          />
         )}
       </ContentWrapper>
 
